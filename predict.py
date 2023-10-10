@@ -40,18 +40,22 @@ sess = tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=8))
 init = tf.global_variables_initializer()
 sess.run(init)
 
-weights = np.load('weights_best_numpy.npy').tolist()
-var_dict = {x.name: x for x in tf.get_collection('variables')}
-for key in var_dict.keys():
-    if key not in weights.keys():
-        print key," not found!!"
-    else:
-        sess.run(var_dict[key].assign(weights[key]))
-        print "Initialized ",key
+saver = tf.train.Saver()
+saver.restore(sess, "checkpoint")
+
+# weights = np.load('weights_best_numpy.npy').tolist()
+# var_dict = {x.name: x for x in tf.get_collection('variables')}
+# for key in var_dict.keys():
+#     if key not in weights.keys():
+#         print(f"{key} not found!!")
+#     else:
+#         sess.run(var_dict[key].assign(weights[key]))
+#         print(f"Initialized {key}")
 sess.run(var_dict['RNN/while/Embedding/Embedding:0'].assign(weights['Embedding/Embedding:0']))
 sess.run(var_dict['RNN/while/MLP.1/MLP.1.W:0'].assign(weights['MLP.1/MLP.1.W:0']))
 sess.run(var_dict['RNN/while/MLP.1/MLP.1.b:0'].assign(weights['MLP.1/MLP.1.b:0']))
 properties = np.load('properties.npy').tolist()
+
 def show():
     batch_size=1
     imgs = np.asarray(Image.open('tmp3.png').convert('YCbCr'))[:,:,0][None,None,:]
@@ -63,9 +67,9 @@ def show():
     visualize=False
     inp_seqs = sess.run(predictions,feed_dict={X:imgs})
 
-    str = idx_to_chars(inp_seqs.flatten().tolist()).split('#END')[0].replace('\left','').replace('\\right','').replace('&','')
-    print "Latex sequence: ",str
-    pyperclip.copy('$'+str+'$')
+    _str = idx_to_chars(inp_seqs.flatten().tolist()).split('#END')[0].replace('\left','').replace('\\right','').replace('&','')
+    print("Latex sequence: {_str}")
+    pyperclip.copy('$'+_str+'$')
 
 def run_demo(filename=None,scale=2):
     if filename:

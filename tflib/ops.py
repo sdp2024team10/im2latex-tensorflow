@@ -440,7 +440,7 @@ class im2latexAttentionCell(tf.nn.rnn_cell.RNNCell):
         target_t = tf.expand_dims(tflib.ops.Linear(self._name+'.target_t',h_t,self._n_hid,self._n_hid,bias=False),2)
         # target_t = tf.expand_dims(h_t,2) # (B, HID, 1)
         a_t = tf.nn.softmax(tf.matmul(self._ctx,target_t)[:,:,0],name='a_t') # (B, H*W, D) * (B, D, 1)
-        print a_t.name
+        print(a_t.name)
 
         def _debug_bkpt(val):
             global ctx_vector

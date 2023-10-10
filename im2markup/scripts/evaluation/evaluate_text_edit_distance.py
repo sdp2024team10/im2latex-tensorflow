@@ -12,7 +12,7 @@ def process_args(args):
 
     parser.add_argument('--log-path', dest="log_path",
                         type=str, default='log.txt',
-                        help=('Log file path, default=log.txt' 
+                        help=('Log file path, default=log.txt'
                         ))
     parameters = parser.parse_args(args)
     return parameters
@@ -38,7 +38,7 @@ def main(args):
     with open(result_file) as fin:
         for idx,line in enumerate(fin):
             if idx % 100 == 0:
-                print (idx)
+                print((idx))
             items = line.strip().split('\t')
             if len(items) == 5:
                 img_path, label_gold, label_pred, score_pred, score_gold = items
@@ -51,7 +51,7 @@ def main(args):
                 total_ref += ref
                 total_edit_distance += edit_distance
     logging.info('Edit Distance Accuracy: %f'%(1.-float(total_edit_distance)/total_ref))
-   
+
 if __name__ == '__main__':
     main(sys.argv[1:])
     logging.info('Jobs finished')

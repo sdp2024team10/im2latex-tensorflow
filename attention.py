@@ -24,7 +24,7 @@ W               = 50
 #     custom_runner = data_loaders.CustomRunner()
 #     X,seqs,mask,reset = custom_runner.get_inputs()
 #
-# print X,seqs
+# print(X,seqs)
 X = tf.placeholder(shape=(None,None,None,None),dtype=tf.float32)
 mask = tf.placeholder(shape=(None,None),dtype=tf.int32)
 seqs = tf.placeholder(shape=(None,None),dtype=tf.int32)
@@ -63,7 +63,7 @@ def predict(set='test',batch_size=1,visualize=True):
     #random_key = (160,40)
     f = f[random_key]
     imgs = []
-    print "Image shape: ",random_key
+    print("Image shape: ",random_key)
     while len(imgs)!=batch_size:
         start = np.random.randint(0,len(f),1)[0]
         if os.path.exists('./images_processed/'+f[start][0]):
@@ -71,7 +71,7 @@ def predict(set='test',batch_size=1,visualize=True):
 
     imgs = np.asarray(imgs,dtype=np.float32).transpose(0,3,1,2)
     inp_seqs = np.zeros((batch_size,160)).astype('int32')
-    print imgs.shape
+    print(imgs.shape)
     inp_seqs[:,0] = np.load('properties.npy').tolist()['char_to_idx']['#START']
     tflib.ops.ctx_vector = []
 
@@ -85,7 +85,7 @@ def predict(set='test',batch_size=1,visualize=True):
 
     for i in xrange(1,160):
         inp_seqs[:,i] = sess.run(predictions,feed_dict={X:imgs,input_seqs:inp_seqs[:,:i]})
-        #print i,inp_seqs[:,i]
+        #print(i,inp_seqs[:,i])
         if visualize==True:
             att = sorted(list(enumerate(tflib.ops.ctx_vector[-1].flatten())),key=lambda tup:tup[1],reverse=True)
             idxs,att = zip(*att)
@@ -93,13 +93,13 @@ def predict(set='test',batch_size=1,visualize=True):
             while sum(att[:j])<0.9:
                 j+=1
             positions = idxs[:j]
-            print "Attention weights: ",att[:j]
+            print("Attention weights: ",att[:j])
             positions = [(pos/r,pos%r) for pos in positions]
             outarray = np.ones((l,r))*255.
             for loc in positions:
                 outarray[loc] = 0.
             out_image = Image.fromarray(outarray).resize((l_size,r_size),Image.NEAREST)
-            print "Latex sequence: ",idx_to_chars(inp_seqs[0,:i])
+            print("Latex sequence: ",idx_to_chars(inp_seqs[0,:i]))
             outp = Image.blend(inp_image.convert('RGBA'),out_image.convert('RGBA'),0.5)
             outp.show(title=properties['idx_to_char'][inp_seqs[0,i]])
             # raw_input()
@@ -108,7 +108,7 @@ def predict(set='test',batch_size=1,visualize=True):
 
     np.save('pred_imgs',imgs)
     np.save('pred_latex',inp_seqs)
-    print "Saved npy files! Use Predict.ipynb to view results"
+    print("Saved npy files! Use Predict.ipynb to view results")
     return inp_seqs
 
 def score(set='valid',batch_size=32):
@@ -118,13 +118,13 @@ def score(set='valid',batch_size=32):
     for score_imgs,score_seqs,score_mask in score_itr:
         _loss = sess.run(loss,feed_dict={X:score_imgs,seqs:score_seqs,mask:score_mask})
         losses.append(_loss)
-        print _loss
+        print(_loss)
 
     set_loss = np.mean(losses)
     perp = np.mean(map(lambda x: np.power(np.e,x), losses))
-    print "\tMean %s Loss: ", set_loss
-    print "\tTotal %s Time: ", time.time()-start
-    print "\tMean %s Perplexity: ", perp
+    print("\tMean %s Loss: ", set_loss)
+    print("\tTotal %s Time: ", time.time()-start)
+    print("\tMean %s Perplexity: ", perp)
     return set_loss, perp
 
 sess = tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=8))
@@ -140,7 +140,7 @@ saver = tf.train.Saver()
 
 losses = []
 times = []
-print "Compiled Train function!"
+print("Compiled Train function!")
 ## Test is train func runs
 # train_fn(np.random.randn(32,1,128,256).astype('float32'),np.random.randint(0,107,(32,50)).astype('int32'),np.random.randint(0,2,(32,50)).astype('int32'), np.zeros((32,1024)).astype('float32'))
 i=0
@@ -160,21 +160,21 @@ for i in xrange(i,NB_EPOCHS):
         times.append(time.time()-start)
         costs.append(_loss)
         if iter%100==0:
-            print "Iter: %d (Epoch %d)"%(iter,i+1)
-            print "\tMean cost: ",np.mean(costs)
-            print "\tMean time: ",np.mean(times)
+            print("Iter: %d (Epoch %d)"%(iter,i+1))
+            print("\tMean cost: ",np.mean(costs))
+            print("\tMean time: ",np.mean(times))
 
-    print "\n\nEpoch %d Completed!"%(i+1)
-    print "\tMean train cost: ",np.mean(costs)
-    print "\tMean train perplexity: ",np.mean(map(lambda x: np.power(np.e,x), costs))
-    print "\tMean time: ",np.mean(times)
+    print("\n\nEpoch %d Completed!"%(i+1))
+    print("\tMean train cost: ",np.mean(costs))
+    print("\tMean train perplexity: ",np.mean(map(lambda x: np.power(np.e,x), costs)))
+    print("\tMean time: ",np.mean(times))
     val_loss, val_perp = score('valid',BATCH_SIZE)
     if val_perp < best_perp:
         best_perp = val_perp
         saver.save(sess,"weights_best.ckpt")
-        print "\tBest Perplexity Till Now! Saving state!"
+        print("\tBest Perplexity Till Now! Saving state!")
     else:
         lr = lr * 0.5
-    print "\n\n"
+    print("\n\n")
 
 #sess.run([train_step,loss],feed_dict={X:np.random.randn(32,1,256,512),seqs:np.random.randint(0,107,(32,40)),mask:np.random.randint(0,2,(32,40))})

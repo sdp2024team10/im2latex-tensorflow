@@ -16,7 +16,7 @@ def process_args(args):
                         ))
     parser.add_argument('--log-path', dest="log_path",
                         type=str, default='log.txt',
-                        help=('Log file path, default=log.txt' 
+                        help=('Log file path, default=log.txt'
                         ))
     parameters = parser.parse_args(args)
     return parameters
@@ -39,7 +39,7 @@ def main(args):
     logging.getLogger('').addHandler(console)
 
     logging.info('Script being executed: %s'%__file__)
-   
+
     label_path = parameters.label_path
     data_path = parameters.data_path
     result_path = parameters.result_path
@@ -63,7 +63,7 @@ def main(args):
     with open(result_path) as fin:
         for line_idx,line in enumerate(fin):
             if line_idx % 1000 == 0:
-                print (line_idx)
+                print((line_idx))
             items = line.strip().split('\t')
             if len(items) == 5:
                 img_path, label_gold, label_pred, score_pred, score_gold = items

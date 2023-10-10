@@ -87,7 +87,7 @@ def main(args):
     crop_blank_default_size = json.loads(parameters.crop_blank_default_size)
     pad_size = json.loads(parameters.pad_size)
     buckets = json.loads(parameters.buckets)
-    print buckets[0]
+    print(buckets[0])
     raw_input()
     downsample_ratio = parameters.downsample_ratio
 

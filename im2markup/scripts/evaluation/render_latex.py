@@ -3,7 +3,7 @@ sys.path.insert(0, '%s'%os.path.join(os.path.dirname(__file__), '../utils/'))
 from utils import run
 from image_utils import *
 from multiprocessing import Pool
-from multiprocessing.dummy import Pool as ThreadPool 
+from multiprocessing.dummy import Pool as ThreadPool
 
 
 TIMEOUT = 10
@@ -55,7 +55,7 @@ def process_args(args):
                         ))
     parser.add_argument('--log-path', dest="log_path",
                         type=str, default='log.txt',
-                        help=('Log file path, default=log.txt' 
+                        help=('Log file path, default=log.txt'
                         ))
     parameters = parser.parse_args(args)
     return parameters
@@ -74,7 +74,7 @@ def main(args):
     logging.getLogger('').addHandler(console)
 
     logging.info('Script being executed: %s'%__file__)
-   
+
     result_path = parameters.result_path
     data_path = parameters.data_path
     label_path = parameters.label_path
@@ -104,8 +104,8 @@ def main(args):
     pool = ThreadPool(parameters.num_threads)
     logging.info('Jobs running...')
     results = pool.map(main_parallel, lines)
-    pool.close() 
-    pool.join() 
+    pool.close()
+    pool.join()
 
 def output_err(output_path, i, reason, img):
     logging.info('ERROR: %s %s\n'%(img,reason))
@@ -130,13 +130,13 @@ def main_parallel(line):
                 new_l = new_l + l[last:m.start(1)] + m.group(1).replace(" ", "")
                 last = m.end(1)
             new_l = new_l + l[last:]
-            l = new_l    
+            l = new_l
     if replace or (not os.path.exists(output_path)):
         tex_filename = pre_name+'.tex'
         log_filename = pre_name+'.log'
         aux_filename = pre_name+'.aux'
-        with open(tex_filename, "w") as w: 
-            print >> w, (template%l)
+        with open(tex_filename, "w") as w:
+            print(>> w, (template%l))
         run("pdflatex -interaction=nonstopmode %s  >/dev/null"%tex_filename, TIMEOUT)
         os.remove(tex_filename)
         os.remove(log_filename)
@@ -152,7 +152,7 @@ def main_parallel(line):
                 crop_image(png_filename, output_path)
                 os.remove(png_filename)
 
-        
+
 if __name__ == '__main__':
     main(sys.argv[1:])
     logging.info('Jobs finished')
