@@ -43,7 +43,7 @@ def process_args(args):
                         ))
     parser.add_argument('--log-path', dest="log_path",
                         type=str, default='log.txt',
-                        help=('Log file path, default=log.txt' 
+                        help=('Log file path, default=log.txt'
                         ))
     parser.add_argument('--postfix', dest='postfix',
                         type=str, default='.png',

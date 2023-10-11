@@ -47,7 +47,7 @@ function reset_state(state, batch_l, t)
             table.insert(u[t], state[i][{{1, batch_l}}])
         end
         return u
-    end      
+    end
 end
 
 -- https://gist.github.com/Badgerati/3261142

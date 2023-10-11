@@ -11,7 +11,7 @@ An example input is a rendered LaTeX formula:
 The goal is to infer the LaTeX formula that can render such an image:
 
 ```
- d s _ { 1 1 } ^ { 2 } = d x ^ { + } d x ^ { - } + l _ { p } ^ { 9 } \frac { p _ { - } } { r ^ { 7 } } \delta ( x ^ { - } ) d x ^ { - } d x ^ { - } + d x _ { 1 } ^ { 2 } + \; \cdots \; + d x _ { 9 } ^ { 2 } 
+ d s _ { 1 1 } ^ { 2 } = d x ^ { + } d x ^ { - } + l _ { p } ^ { 9 } \frac { p _ { - } } { r ^ { 7 } } \delta ( x ^ { - } ) d x ^ { - } d x ^ { - } + d x _ { 1 } ^ { 2 } + \; \cdots \; + d x _ { 9 } ^ { 2 }
 ```
 
 Our model employs a convolutional network for text and layout recognition in tandem with an attention-based neural machine translation system. The use of attention additionally provides an alignment from the generated markup to the original source image:
@@ -21,7 +21,7 @@ Our model employs a convolutional network for text and layout recognition in tan
 
 See [our website](http://lstm.seas.harvard.edu/latex/) for a complete interactive version of this visualization over the test set. Our paper (http://arxiv.org/pdf/1609.04938v1.pdf) provides more technical details of this model.
 
-    What You Get Is What You See: A Visual Markup Decompiler  
+    What You Get Is What You See: A Visual Markup Decompiler
     Yuntian Deng, Anssi Kanervisto, and Alexander M. Rush
     http://arxiv.org/pdf/1609.04938v1.pdf
 
@@ -37,7 +37,7 @@ Most of the code is written in [Torch](http://torch.ch), with Python for preproc
 The following lua libraries are required for the main model.
 
 * tds
-* class 
+* class
 * nn
 * nngraph
 * cunn
@@ -113,7 +113,7 @@ To get started with, we provide a toy Math-to-LaTex example. We have a larger da
 
 ### Preprocess
 
-The images in the dataset contain a LaTeX formula rendered on a full page. To accelerate training, we need to preprocess the images. 
+The images in the dataset contain a LaTeX formula rendered on a full page. To accelerate training, we need to preprocess the images.
 
 ```
 python scripts/preprocessing/preprocess_images.py --input-dir data/sample/images --output-dir data/sample/images_processed
@@ -132,15 +132,15 @@ The above command will normalize the formulas. Note that this command will produ
 Then we need to prepare train, validation and test files. We will exclude large images from training and validation set, and we also ignore formulas with too many tokens or formulas with grammar errors.
 
 ```
-python scripts/preprocessing/preprocess_filter.py --filter --image-dir data/sample/images_processed --label-path data/sample/formulas.norm.lst --data-path data/sample/train.lst --output-path data/sample/train_filter.lst 
+python scripts/preprocessing/preprocess_filter.py --filter --image-dir data/sample/images_processed --label-path data/sample/formulas.norm.lst --data-path data/sample/train.lst --output-path data/sample/train_filter.lst
 ```
 
 ```
-python scripts/preprocessing/preprocess_filter.py --filter --image-dir data/sample/images_processed --label-path data/sample/formulas.norm.lst --data-path data/sample/validate.lst --output-path data/sample/validate_filter.lst 
+python scripts/preprocessing/preprocess_filter.py --filter --image-dir data/sample/images_processed --label-path data/sample/formulas.norm.lst --data-path data/sample/validate.lst --output-path data/sample/validate_filter.lst
 ```
 
 ```
-python scripts/preprocessing/preprocess_filter.py --no-filter --image-dir data/sample/images_processed --label-path data/sample/formulas.norm.lst --data-path data/sample/test.lst --output-path data/sample/test_filter.lst 
+python scripts/preprocessing/preprocess_filter.py --no-filter --image-dir data/sample/images_processed --label-path data/sample/formulas.norm.lst --data-path data/sample/test.lst --output-path data/sample/test_filter.lst
 ```
 
 Finally, we generate the vocabulary from training set. All tokens occuring less than (including) 1 time will be excluded from the vocabulary.
@@ -191,7 +191,7 @@ th src/train.lua -phase test -gpu_id 1 -load_model -model_dir model/latex -visua
 -label_path data/sample/formulas.norm.lst \
 -output_dir results \
 -max_num_tokens 500 -max_image_width 800 -max_image_height 800 \
--batch_size 5 -beam_size 5 
+-batch_size 5 -beam_size 5
 ```
 
 Note that we do not specify a vocabulary file here, since it is already included in the model. After a while, the perplexities will be logged, and the predictions file results.txt will be put to `output_dir`. The format of the predicitons file is:
@@ -284,7 +284,7 @@ th src/train.lua -phase test -gpu_id 1 -load_model -model_dir model/html -visual
 -label_path data/html_64_64_100k/html_sources.txt \
 -output_dir results \
 -max_num_tokens 400 -max_image_width 64 -max_image_height 64 \
--batch_size 80 -beam_size 5 
+-batch_size 80 -beam_size 5
 ```
 
 ### Evaluate

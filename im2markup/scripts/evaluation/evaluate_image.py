@@ -17,7 +17,7 @@ def process_args(args):
 
     parser.add_argument('--log-path', dest="log_path",
                         type=str, default='log.txt',
-                        help=('Log file path, default=log.txt' 
+                        help=('Log file path, default=log.txt'
                         ))
     parameters = parser.parse_args(args)
     return parameters
@@ -36,12 +36,12 @@ def main(args):
     logging.getLogger('').addHandler(console)
 
     logging.info('Script being executed: %s'%__file__)
-   
+
     images_dir = parameters.images_dir
     gold_dir = os.path.join(images_dir, 'images_gold')
     pred_dir = os.path.join(images_dir, 'images_pred')
-    assert os.path.exists(gold_dir), gold_dir 
-    assert os.path.exists(pred_dir), pred_dir 
+    assert os.path.exists(gold_dir), gold_dir
+    assert os.path.exists(pred_dir), pred_dir
     total_edit_distance = 0
     total_ref = 0
     total_num = 0
@@ -132,7 +132,7 @@ def img_edit_distance(im1, im2, out_path=None):
                 if int(l, 2) in d: continue
                 found = False
                 l_arr = np.array(map(int, l))
-            
+
                 for l2,l2_arr in seen:
                     if np.abs(l_arr -l2_arr).sum() < 5:
                         d[int(l, 2)] = d[int(l2, 2)]
@@ -141,7 +141,7 @@ def img_edit_distance(im1, im2, out_path=None):
                 if not found:
                     d[int(l, 2)] = unichr(len(seen))
                     seen.append((l, np.array(map(int, l))))
-                    
+
         build(int_ls)
         build(int_ls2)
         return "".join([d[int(l, 2)] for l in int_ls]), "".join([d[int(l, 2)] for l in int_ls2])
@@ -158,7 +158,7 @@ def img_edit_distance(im1, im2, out_path=None):
             if op[0] == "equal" or (op[2]-op[1] < 5):
                 ls += [[int(r) for r in l]
                        for l in seq1[op[1]:op[2]]
-                       ] 
+                       ]
             elif op[0] == "replace":
                 a = seq1[op[1]:op[2]]
                 b = seq2[op[3]:op[4]]
@@ -204,7 +204,7 @@ def img_edit_distance(im1, im2, out_path=None):
         if op[0] == "equal" or (op[2]-op[1] < 5):
             ls += [[int(r) for r in l]
                    for l in seq1[op[1]:op[2]]
-                   ] 
+                   ]
         elif op[0] == "replace":
             a = seq1[op[1]:op[2]]
             b = seq2[op[3]:op[4]]

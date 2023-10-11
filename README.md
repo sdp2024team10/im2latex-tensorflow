@@ -8,7 +8,7 @@ The paper (http://arxiv.org/pdf/1609.04938v1.pdf) provides technical details of 
 
 Original Torch implementation of the paper[https://github.com/harvardnlp/im2markup/blob/master/]
 
-    What You Get Is What You See: A Visual Markup Decompiler  
+    What You Get Is What You See: A Visual Markup Decompiler
     Yuntian Deng, Anssi Kanervisto, and Alexander M. Rush
     http://arxiv.org/pdf/1609.04938v1.pdf
 

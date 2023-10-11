@@ -16,7 +16,7 @@ rl.on('line', function(line){
     line = line.split('%')[0];
 
     line = line.split('\\~').join(' ');
-    
+
     for (var i = 0; i < 300; i++) {
         line = line.replace(/\\>/, " ");
         line = line.replace('$', ' ');
@@ -29,13 +29,13 @@ rl.on('line', function(line){
             line = line.replace(/\\\\/, "\\,");
         }
     }
-    
+
 
     line = line + " "
     // global_str is tokenized version (build in parser.js)
     // norm_str is normalized version build by renderer below.
     try {
-    
+
 
         if (process.argv[2] == "tokenize") {
             var tree = katex.__parse(line, {});
@@ -48,7 +48,7 @@ rl.on('line', function(line){
             }
 
             var tree = katex.__parse(line, {});
-            buildExpression(tree, new options({}));            
+            buildExpression(tree, new options({}));
             for (var i = 0; i < 300; ++i) {
                 norm_str = norm_str.replace('SSSSSS', '$');
                 norm_str = norm_str.replace(' S S S S S S', '$');
@@ -123,7 +123,7 @@ groupTypes.ordgroup = function(group, options) {
 };
 
 groupTypes.text = function(group, options) {
-    
+
     norm_str = norm_str + "\\mathrm { ";
 
     buildExpression(group.value.body, options);
@@ -152,7 +152,7 @@ groupTypes.supsub = function(group, options) {
         } else {
             buildGroup(group.value.sub, options);
         }
-        
+
     }
 
     if (group.value.sup) {
@@ -199,7 +199,7 @@ groupTypes.array = function(group, options) {
             });
             norm_str = norm_str.substring(0, norm_str.length-2) + "\\\\ ";
         }
-    }); 
+    });
     norm_str = norm_str + "\\end{array} ";
 };
 
@@ -248,8 +248,8 @@ groupTypes.op = function(group) {
     var node;
 
     // TODO(emily): handle big operators using the `largeop` attribute
-    
-    
+
+
     if (group.value.symbol) {
         // This is a symbol. Just add the symbol.
         norm_str = norm_str + group.value.body + " ";
@@ -282,7 +282,7 @@ groupTypes.font = function(group, options) {
         font = "mathrm";
     }
     norm_str = norm_str + "\\" + font + " ";
-    buildGroup(group.value.body, options.withFont(font));    
+    buildGroup(group.value.body, options.withFont(font));
 };
 
 groupTypes.delimsizing = function(group) {
@@ -299,7 +299,7 @@ groupTypes.styling = function(group, options) {
 groupTypes.sizing = function(group, options) {
 
     if (group.value.original == "\\rm") {
-        norm_str = norm_str + "\\mathrm { "; 
+        norm_str = norm_str + "\\mathrm { ";
         buildExpression(group.value.value, options.withFont("mathrm"));
         norm_str = norm_str + "} ";
     } else {
@@ -310,7 +310,7 @@ groupTypes.sizing = function(group, options) {
 
 groupTypes.overline = function(group, options) {
     norm_str = norm_str + "\\overline { ";
-    
+
     buildGroup(group.value.body, options);
     norm_str = norm_str + "} ";
     norm_str = norm_str;

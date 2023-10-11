@@ -17,7 +17,7 @@ function parseArray(parser, result) {
     var rowGaps = [];
 
     while (true) {
-        
+
         // if (q == 1) console.error(parser.nextToken.text);
         try {
             var cell = parser.parseExpression(false, null);

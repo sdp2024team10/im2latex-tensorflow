@@ -1,4 +1,4 @@
- --[[ Load image data. Adapted from https://github.com/da03/Attention-OCR/blob/master/src/data_util/data_gen.py. 
+ --[[ Load image data. Adapted from https://github.com/da03/Attention-OCR/blob/master/src/data_util/data_gen.py.
  --    ARGS:
  --        - `data_base_dir`      : string, The base directory of the image path in data_path. If the image path in data_path is absolute path, set it to /.
  --        - `data_path`  : string, The path containing data file names and labels. Format per line: image_path characters. Note that the image_path is the relative path to data_base_dir
@@ -30,7 +30,7 @@ function DataGen:__init(data_base_dir, data_path, label_path, max_aspect_ratio, 
         log = print
     end
     local file, err = io.open(self.data_path, "r")
-    if err then 
+    if err then
         file, err = io.open(paths.concat(self.data_base_dir, self.data_path), "r")
         if err then
             log(string.format('Error: Data file %s not found ', self.data_path))
@@ -120,8 +120,8 @@ function DataGen:nextBatch(batch_size)
                     for i = 1, #self.buffer[imgW][imgH] do
                         num_nonzeros = num_nonzeros + #self.buffer[imgW][imgH][i][2] - 1
                         for j = 1, #self.buffer[imgW][imgH][i][2]-1 do
-                            targets[i][j] = self.buffer[imgW][imgH][i][2][j] 
-                            targets_eval[i][j] = self.buffer[imgW][imgH][i][2][j+1] 
+                            targets[i][j] = self.buffer[imgW][imgH][i][2][j]
+                            targets_eval[i][j] = self.buffer[imgW][imgH][i][2][j+1]
                         end
                     end
                     self.buffer[imgW][imgH] = nil
@@ -148,7 +148,7 @@ function DataGen:nextBatch(batch_size)
         end
         imgW, v = next(self.buffer, imgW)
     end
-    local imgH, v = next(self.buffer[imgW], nil) 
+    local imgH, v = next(self.buffer[imgW], nil)
     real_batch_size = #self.buffer[imgW][imgH]
     local images = torch.Tensor(real_batch_size, 1, imgH, imgW)
     local max_target_length = -math.huge
@@ -165,8 +165,8 @@ function DataGen:nextBatch(batch_size)
     for i = 1, #self.buffer[imgW][imgH] do
         num_nonzeros = num_nonzeros + #self.buffer[imgW][imgH][i][2] - 1
         for j = 1, #self.buffer[imgW][imgH][i][2]-1 do
-            targets[i][j] = self.buffer[imgW][imgH][i][2][j] 
-            targets_eval[i][j] = self.buffer[imgW][imgH][i][2][j+1] 
+            targets[i][j] = self.buffer[imgW][imgH][i][2][j]
+            targets_eval[i][j] = self.buffer[imgW][imgH][i][2][j+1]
         end
     end
     self.buffer[imgW][imgH] = nil

@@ -2,7 +2,7 @@ import sys, os, re, shutil, argparse, logging
 sys.path.insert(0, '%s'%os.path.join(os.path.dirname(__file__), '../utils/'))
 from image_utils import *
 from multiprocessing import Pool
-from multiprocessing.dummy import Pool as ThreadPool 
+from multiprocessing.dummy import Pool as ThreadPool
 
 W=100
 H=100
@@ -30,7 +30,7 @@ def process_args(args):
                         ))
     parser.add_argument('--log-path', dest="log_path",
                         type=str, default='log.txt',
-                        help=('Log file path, default=log.txt' 
+                        help=('Log file path, default=log.txt'
                         ))
     parameters = parser.parse_args(args)
     return parameters
@@ -49,7 +49,7 @@ def main(args):
     logging.getLogger('').addHandler(console)
 
     logging.info('Script being executed: %s'%__file__)
-   
+
     result_path = parameters.result_path
     output_dir = parameters.output_dir
     assert os.path.exists(result_path), result_path
@@ -69,13 +69,13 @@ def main(args):
                 img_idx = img_path[:-9]
                 lines.append((label_pred, img_idx, pred_dir, parameters.replace))
                 lines.append((label_gold, img_idx, gold_dir, parameters.replace))
-    
+
     logging.info('Creating pool with %d threads'%parameters.num_threads)
     pool = ThreadPool(parameters.num_threads)
     logging.info('Jobs running...')
     results = pool.map(main_parallel, lines)
-    pool.close() 
-    pool.join() 
+    pool.close()
+    pool.join()
 
 
 def main_parallel(l):

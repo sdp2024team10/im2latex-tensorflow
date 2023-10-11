@@ -452,7 +452,7 @@ Parser.prototype.parseImplicitGroup = function() {
         var result = env.handler(context, args);
         this.expect("\\end", false);
         var end = this.parseFunction();
-        
+
         var name = (begin.value.name + "")
 
         global_str = global_str.substring(0, global_str.length - (name.length * 2 + 2)) + name + "}"
@@ -501,7 +501,7 @@ Parser.prototype.parseImplicitGroup = function() {
         // result.position = end.position;
 
         return result;
-        
+
     } else if (utils.contains(sizeFuncs, func)) {
         // If we see a sizing function, parse out the implict body
         body = this.parseExpression(false);
@@ -780,7 +780,7 @@ Parser.prototype.parseSymbol = function() {
             false);
     } else if (nucleus.text == "EOF" || nucleus.text == "{") {
         return null;
-        
+
     } else {
         this.consume();
         // console.error(nucleus);

@@ -14,7 +14,7 @@
  --        inputs: x, (context), (prev attention), [prev_c, prev_h]*L
  --        outputs: [next_c, next_h]*L, h_out
  --]]
- 
+
 function createLSTM(input_size, num_hidden, num_layers,
     dropout,
     use_attention, input_feed,
@@ -23,7 +23,7 @@ function createLSTM(input_size, num_hidden, num_layers,
     max_encoder_l,
     model)
 
-  dropout = dropout or 0 
+  dropout = dropout or 0
 
   -- there will be 2*n+1 inputs
   local inputs = {}
@@ -62,9 +62,9 @@ function createLSTM(input_size, num_hidden, num_layers,
           x = nn.JoinTable(2):usePrealloc("dec_inputfeed_join",
             {{batch_size, input_size},{batch_size, num_hidden}})({x, inputs[1+offset]}) -- batch_size x (input_size + num_hidden)
           input_size_L = input_size + num_hidden
-      end    
-    else 
-      x = outputs[(L-1)*2] 
+      end
+    else
+      x = outputs[(L-1)*2]
       if dropout then x = nn.Dropout(dropout):usePrealloc(nameL.."dropout",
           {{batch_size, input_size_L}})(x) end -- apply dropout, if any
       input_size_L = num_hidden
@@ -103,7 +103,7 @@ function createLSTM(input_size, num_hidden, num_layers,
       })
     -- gated cells form the output
     local next_h = nn.CMulTable():usePrealloc(nameL.."G5d",{{batch_size,num_hidden},{batch_size,num_hidden}})({out_gate, nn.Tanh():usePrealloc(nameL.."G6-reuse",{{batch_size,num_hidden}})(next_c)})
-    
+
     table.insert(outputs, next_c)
     table.insert(outputs, next_h)
   end
@@ -115,7 +115,7 @@ function createLSTM(input_size, num_hidden, num_layers,
     decoder_out = decoder_attn({top_h, inputs[2]})
     if dropout then
       decoder_out = nn.Dropout(dropout, nil, false):usePrealloc("dec_dropout",{{batch_size,num_hidden}})(decoder_out)
-    end     
+    end
     table.insert(outputs, decoder_out)
   end
   return nn.gModule(inputs, outputs)
@@ -124,7 +124,7 @@ end
 function create_decoder_attn(num_hidden, simple, batch_size, max_encoder_l)
   -- inputs[1]: 2D tensor target_t (batch_l x num_hidden) and
   -- inputs[2]: 3D tensor for context (batch_l x source_l x input_size)
-  
+
   local inputs = {}
   table.insert(inputs, nn.Identity()())
   table.insert(inputs, nn.Identity()())
@@ -140,7 +140,7 @@ function create_decoder_attn(num_hidden, simple, batch_size, max_encoder_l)
   softmax_attn.name = 'softmax_attn'
   attn = softmax_attn(attn)
   attn = nn.Replicate(1,2)(attn) -- batch_l x  1 x source_l
-  
+
   -- apply attention to context
   local context_combined = nn.MM():usePrealloc("dec_attn_mm2",
                                                  {{batch_size, 1, max_encoder_l},{batch_size, max_encoder_l, num_hidden}},
@@ -157,6 +157,6 @@ function create_decoder_attn(num_hidden, simple, batch_size, max_encoder_l)
   else
     context_output = nn.CAddTable():usePrealloc("dec_attn_caddtable1",
     {{batch_size, num_hidden}, {batch_size, num_hidden}})({context_combined,inputs[1]})
-  end   
-  return nn.gModule(inputs, {context_output})   
+  end
+  return nn.gModule(inputs, {context_output})
 end

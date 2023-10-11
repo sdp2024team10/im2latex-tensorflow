@@ -492,7 +492,7 @@ defineFunction([
 
      "\\label", "\\comment", "\\hspace", "\\vspace", "\\atop", "\\fbox", "\\tag", "\\makebox",
     "\\raisebox", "\\framebox", "\\circle", "\\line", "\\put", "\\vphantom", "\\textup", "\\noalign",
-    
+
     // aliases
     "\\Bbb", "\\bold", "\\frak",
 ], {

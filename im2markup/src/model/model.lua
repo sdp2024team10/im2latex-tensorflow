@@ -17,7 +17,7 @@ require 'memory'
 
 local model = torch.class('Model')
 
---[[ Args: 
+--[[ Args:
 -- config.load_model
 -- config.model_dir
 -- config.dropout
@@ -55,7 +55,7 @@ function model:load(model_path, config)
     self.cnn_model = model[1]:double()
     self.encoder_fw = model[2]:double()
     self.encoder_bw = model[3]:double()
-    self.decoder = model[4]:double()      
+    self.decoder = model[4]:double()
     self.output_projector = model[5]:double()
     self.pos_embedding_fw = model[6]:double()
     self.pos_embedding_bw = model[7]:double()
@@ -197,7 +197,7 @@ function model:_build()
     self.decoder_clones = clone_many_times(self.decoder, self.max_decoder_l)
     self.encoder_fw_clones = clone_many_times(self.encoder_fw, self.max_encoder_l_w)
     self.encoder_bw_clones = clone_many_times(self.encoder_bw, self.max_encoder_l_w)
-    
+
     for i = 1, #self.encoder_fw_clones do
         if self.encoder_fw_clones[i].apply then
             self.encoder_fw_clones[i]:apply(function(m) m:setReuse() end)
@@ -238,7 +238,7 @@ function model:_build()
         table.insert(self.init_fwd_dec, decoder_h_init:clone()) -- memory cell
         table.insert(self.init_fwd_dec, decoder_h_init:clone()) -- hidden state
         table.insert(self.init_bwd_dec, decoder_h_init:clone())
-        table.insert(self.init_bwd_dec, decoder_h_init:clone()) 
+        table.insert(self.init_bwd_dec, decoder_h_init:clone())
     end
     self.dec_offset = 3 -- offset depends on input feeding
     if self.input_feed then
@@ -249,7 +249,7 @@ function model:_build()
     collectgarbage()
 end
 
--- one step 
+-- one step
 function model:step(batch, forward_only, beam_size, trie)
     if forward_only then
         self.val_batch_size = self.batch_size
@@ -575,7 +575,7 @@ function model:step(batch, forward_only, beam_size, trie)
                             end
                             self.trie_locations[b] = trie_locations
                         end
-                        
+
                     end
                 end
                 beam_parents = localize(raw_indices:int()/self.target_vocab_size+1) -- batch_size, beam_size for number of beam in each batch
@@ -779,7 +779,7 @@ function model:step(batch, forward_only, beam_size, trie)
                 drnn_state_dec[#drnn_state_dec]:zero()
                 if self.input_feed then
                     drnn_state_dec[#drnn_state_dec]:copy(dlst[3])
-                end     
+                end
                 for j = self.dec_offset, #dlst do
                     drnn_state_dec[j-self.dec_offset+1]:copy(dlst[j])
                 end
@@ -895,7 +895,7 @@ function model:vis(output_dir)
     local file_attn, err_attn = io.open(self.visualize_attn_path, "w")
     self.visualize_file = file
     self.visualize_attn_file = file_attn
-    if err then 
+    if err then
         log(string.format('Error: visualize file %s cannot be created', self.visualize_path))
         self.visualize  = false
         self.visualize_file = nil
@@ -908,7 +908,7 @@ function model:vis(output_dir)
         for i = 1, #self.decoder_clones do
             local decoder = self.decoder_clones[i]
             local decoder_attn
-            decoder:apply(function (layer) 
+            decoder:apply(function (layer)
                 if layer.name == 'decoder_attn' then
                     decoder_attn = layer
                 end
